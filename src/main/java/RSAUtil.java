@@ -42,7 +42,20 @@ class RSAUtil {
         PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
         PrivateKey privateKey = keyFactory.generatePrivate(keySpecPr);
 
-
+        //Theoretical explanation:
+        // The following is the case where I (Bob) encrypt the text
+        // with the public key of Alice, and then she decrypts the cyphertext
+        // using his own private key.
+        // This forbids to a evil user in between to read the content of the text,
+        // (because he miss the unique private Alice's key), however he can still spoof me
+        // (by using my ip for example).
+        // To achieve full protection I need in addition to encrypt the cyphertext
+        // with my private key, so in this way, Alice using my public key
+        // can be sure that this message was sent from me (because only I have my private key)
+        // To recap: when Bob encrypts the message with Alice's public key, he knows that
+        // only Alice can read it. When Bob encrypts the text with his own private key
+        // he knows that whoever read the message it is sure that it was sent exactly by Bob.
+        // When Bob uses both, then the action is combined.
         String encryptedString = Base64.getEncoder().encodeToString(encrypt(data, publicKey));
         System.out.println("Encrypted string: " + encryptedString);
 
