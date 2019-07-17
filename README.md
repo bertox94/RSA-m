@@ -1,2 +1,2 @@
-# encryption
-cypher module
+# RSA Cypher
+encrypter, decrypter, key_generator module
