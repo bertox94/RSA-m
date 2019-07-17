@@ -1,2 +1,2 @@
 # RSA Cypher
-encrypter decrypter + keyGeneration module
+encrypter, decrypter, key_generator module
