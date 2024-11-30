@@ -55,7 +55,7 @@ class RSAUtil {
         // To recap: when Bob encrypts the message with Alice's public key, he knows that
         // only Alice can read it. When Bob encrypts the text with his own private key
         // he knows that whoever read the message it is sure that it was sent exactly by Bob.
-        // When Bob uses both, then the action is combined.
+        // When Bob uses both, then the action is combined. Note that here only one encryption is used, we should encrypt the mag also with the private key if the sender.
         String encryptedString = Base64.getEncoder().encodeToString(encrypt(data, publicKey));
         System.out.println("Encrypted string: " + encryptedString);
 
