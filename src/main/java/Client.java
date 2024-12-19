@@ -14,10 +14,7 @@ public class Client {
 
     public static void main(String[] args) {
         try {
-            Crypto crypto = new Crypto(1024);
-            KeyPair clientKey = crypto.generateKeyPair();
-            myPrivateKey = clientKey.getPrivate().getEncoded();
-            myPublicKey = clientKey.getPublic().getEncoded();
+            Crypto crypto = getCrypto();
 
             System.out.println("Private Key: " + Base64.getEncoder().encodeToString(myPrivateKey));
             System.out.println("Public Key: " + Base64.getEncoder().encodeToString(myPublicKey));
@@ -45,13 +42,11 @@ public class Client {
             //ESEMPIO INVIO DA CLIENT A SERVER
             /*
             String msg = "TestInvio";
-
-            String encryptedStringg = Base64.getEncoder()
-                    .encodeToString(crypto.encrypt(msg, publicKeyOfServer));
-            System.out.println("Encrypted string: " + encryptedStringg);
+            String encryptedString = Base64.getEncoder().encodeToString(crypto.encrypt(msg, myPublicKey));
+            System.out.println("Encrypted string: " + encryptedString);
             */
 
-            //ESEMPIO INVIO DA CLIENT A SERVER
+            //ESEMPIO INVIO DA SERVER A CLIENT
             //INIZIO CODICE LATO SERVER:
             String msg = "TestInvio";
             String encryptedString = Base64.getEncoder().encodeToString(crypto.encrypt(msg, myPublicKey));
@@ -68,9 +63,14 @@ public class Client {
                  InvalidKeyException | NoSuchPaddingException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
+    private static Crypto getCrypto() throws NoSuchPaddingException, NoSuchAlgorithmException {
+        Crypto crypto = new Crypto(1024);
+        KeyPair clientKey = crypto.generateKeyPair();
+        myPrivateKey = clientKey.getPrivate().getEncoded();
+        myPublicKey = clientKey.getPublic().getEncoded();
+        return crypto;
+    }
 
 }

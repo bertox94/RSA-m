@@ -14,38 +14,35 @@ import java.util.Base64;
 public class Crypto {
     private final KeyPairGenerator keyGen;
     private final KeyFactory keyFactory;
+    private final Cipher cipher;
 
-    public Crypto(int size) {
-        try {
-            keyGen = KeyPairGenerator.getInstance("RSA");
-            keyGen.initialize(size);
-            keyFactory = KeyFactory.getInstance("RSA");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+    public Crypto(int size) throws NoSuchPaddingException, NoSuchAlgorithmException {
+        keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(size);
+        keyFactory = KeyFactory.getInstance("RSA");
+        cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+
     }
 
     public KeyPair generateKeyPair() throws NoSuchAlgorithmException {
         return keyGen.generateKeyPair();
     }
 
-    public void writeToFile(String path, Key key) throws IOException {
+    public void writeToFile(String path, byte[] key) throws IOException {
         File f = new File(path);
         FileOutputStream fos = new FileOutputStream(f);
-        fos.write(key.getEncoded());
+        fos.write(key);
         fos.close();
     }
 
-    public byte[] encrypt(String data, byte[] publicKey) throws InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException {
+    public byte[] encrypt(String data, byte[] publicKey) throws InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKey);
-        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, keyFactory.generatePublic(publicKeySpec));
         return cipher.doFinal(data.getBytes());
     }
 
-    public String decrypt(String data, byte[] privateKey) throws InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException {
+    public String decrypt(String data, byte[] privateKey) throws InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         PKCS8EncodedKeySpec keySpecPr = new PKCS8EncodedKeySpec(privateKey);
-        Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, keyFactory.generatePrivate(keySpecPr));
         return new String(cipher.doFinal(Base64.getDecoder().decode(data.getBytes())));
     }

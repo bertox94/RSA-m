@@ -1,6 +1,7 @@
+import javax.crypto.NoSuchPaddingException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import java.util.Base64;
 import java.util.Map;
 
 public class Server {
@@ -14,10 +15,10 @@ public class Server {
 
     public static void main(String[] args) {
         try {
-            Crypto crypto = new Crypto(1024);
-            KeyPair t = crypto.generateKeyPair();
-            myPrivateKey = t.getPrivate().getEncoded();
-            myPublicKey = t.getPublic().getEncoded();
+            Crypto crypto = getCrypto();
+
+            System.out.println("Private Key: " + Base64.getEncoder().encodeToString(myPrivateKey));
+            System.out.println("Public Key: " + Base64.getEncoder().encodeToString(myPublicKey));
 
             /*
             Socket socket = ...
@@ -38,8 +39,17 @@ public class Server {
             }
             */
 
-        } catch (NoSuchAlgorithmException e) {
+
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static Crypto getCrypto() throws NoSuchPaddingException, NoSuchAlgorithmException {
+        Crypto crypto = new Crypto(1024);
+        KeyPair clientKey = crypto.generateKeyPair();
+        myPrivateKey = clientKey.getPrivate().getEncoded();
+        myPublicKey = clientKey.getPublic().getEncoded();
+        return crypto;
     }
 }
