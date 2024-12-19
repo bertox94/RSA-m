@@ -9,8 +9,5 @@
         <module name="RSA-m" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="RSA-m" target="8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
