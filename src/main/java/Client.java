@@ -24,7 +24,8 @@ public class Client {
 
             DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
             DataInputStream dIn = new DataInputStream(socket.getInputStream());
-
+            
+            //on the receiving end...
             dOut.writeInt(clientPublicKey.length); // write length of clientPublicKey
             dOut.write(clientPublicKey);           // write clientPublicKey
 
