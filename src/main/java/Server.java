@@ -27,7 +27,6 @@ public class Server {
             DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
             DataInputStream dIn = new DataInputStream(socket.getInputStream());
 
-            //on the receiving end
             dOut.writeInt(myPublicKey.length); // write length of myPublicKey
             dOut.write(myPublicKey);           // write myPublicKey
 
